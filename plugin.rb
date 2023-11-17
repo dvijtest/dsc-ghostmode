@@ -1,8 +1,7 @@
 # name: ghostmode
 # about: Hide a user's posts from everybody else
 # version: 0.0.1
-# authors: Michael Howell (notriddle)
-# url: https://github.com/dvijtest/discourse-ghostmode
+# authors: dvij
 enabled_site_setting :ghostmode_enabled
 
 after_initialize do
