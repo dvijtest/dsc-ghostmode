@@ -1,0 +1,7 @@
+# encoding: utf-8
+en:
+  site_settings:
+    ghostmode_enabled: "Enable ghostmode"
+    ghostmode_topics: "Topics subject to the ghostmode"
+    ghostmode_posts: "Posts subject to the ghostmode"
+    ghostmode_show_to_staff: "Show marked posts to staff"
