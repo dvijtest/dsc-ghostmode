@@ -1,6 +1,6 @@
 # name: dsc-ghostmode
 # about: Hide a user's posts from everybody else
-# version: 0.0.14
+# version: 0.0.15
 # authors: dvijtest
 enabled_site_setting :ghostmode_enabled
 
@@ -60,7 +60,7 @@ after_initialize do
 
   module ::DiscourseShadowbanPostAlerter
     def create_notification(user, type, post, opts = {})
-      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(@post.id).nil?
+      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(post.id).nil?
         super(user, type, post, opts)
       end
     end
