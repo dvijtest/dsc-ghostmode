@@ -13,7 +13,7 @@ after_initialize do
         result
       else
         result.where(
-          'posts.id NOT IN (?) AND u.id != ?',
+          'posts.id NOT IN (?)',
           SiteSetting.ghostmode_posts.split('|'),
           @user&.id || 0
         )
@@ -32,7 +32,7 @@ after_initialize do
         result
       else
         result.where(
-          'topics.id NOT IN (?) AND u.id != ?',
+          'topics.id NOT IN (?)',
           SiteSetting.ghostmode_topics.split('|'),
           @user&.id || 0
         )
