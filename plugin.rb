@@ -58,7 +58,7 @@ after_initialize do
 
   module ::DiscourseShadowbanPostAlerter
     def create_notification(user, type, post, opts = {})
-      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(post.id).nil?
+      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(@post.id).nil?
         super(user, type, post, opts)
       end
     end
