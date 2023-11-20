@@ -15,7 +15,7 @@ after_initialize do
         result.where(
           'posts.id NOT IN (?)',
           SiteSetting.ghostmode_posts.split('|')
-          #@user&.id || 0
+          @user&.id || 0
         )
       end
     end
@@ -34,7 +34,7 @@ after_initialize do
         result.where(
           'topics.id NOT IN (?)',
           SiteSetting.ghostmode_topics.split('|')
-          #@user&.id || 0
+          @user&.id || 0
         )
       end
     end
