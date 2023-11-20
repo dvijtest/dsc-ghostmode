@@ -1,11 +1,10 @@
 # name: ghostmode
 # about: Hide a user's posts from everybody else
-# version: 0.0.3
+# version: 0.0.4
 # authors: dvij
 enabled_site_setting :ghostmode_enabled
 
 after_initialize do
-
   module ::DiscourseShadowbanTopicView
     def filter_post_types(posts)
       result = super(posts)
@@ -14,8 +13,7 @@ after_initialize do
       else
         result.where(
           'posts.id NOT IN (?)',
-          SiteSetting.ghostmode_posts.split('|'),
-          @user&.id || 0
+          SiteSetting.ghostmode_posts.split('|')
         )
       end
     end
@@ -33,8 +31,7 @@ after_initialize do
       else
         result.where(
           'topics.id NOT IN (?)',
-          SiteSetting.ghostmode_topics.split('|'),
-          @user&.id || 0
+          SiteSetting.ghostmode_topics.split('|')
         )
       end
     end
@@ -58,9 +55,9 @@ after_initialize do
 
   module ::DiscourseShadowbanPostCreator
     def update_topic_stats
-      if SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil?
-        super
-      end
+      return unless SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil?
+
+      super
     end
   end
 
