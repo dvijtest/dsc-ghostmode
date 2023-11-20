@@ -11,3 +11,7 @@ plugins:
   ghostmode_show_to_staff:
     default: false
     client: true
+  #v0.0.19
+  ghostmode_show_staff_replies:
+    default: false
+    client: true

@@ -5,3 +5,5 @@ en:
     ghostmode_topics: "Topics subject to the ghostmode"
     ghostmode_posts: "Posts subject to the ghostmode"
     ghostmode_show_to_staff: "Show marked posts to staff"
+    # #v0.0.19
+    ghostmode_show_staff_replies: "Show posts to all"
