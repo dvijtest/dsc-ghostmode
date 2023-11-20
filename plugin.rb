@@ -1,6 +1,6 @@
 # name: ghostmode
 # about: Hide a user's posts from everybody else
-# version: 0.0.7
+# version: 0.0.8
 # authors: dvij
 enabled_site_setting :ghostmode_enabled
 
@@ -17,7 +17,7 @@ after_initialize do
         # )
         result.where(
           #'(posts.id NOT IN (?) OR posts.user_id = ?)',
-          '(posts.id NOT IN (?) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?))',
+          '(posts.id NOT IN (?) OR posts.user_id IN (SELECT u.id FROM users u WHERE admin = ? OR u.id = ?))',
           SiteSetting.ghostmode_posts.split('|'),
           "t",
           @user&.id || 0
@@ -42,7 +42,7 @@ after_initialize do
         #  )
         result.where(
           #'(topics.id NOT IN (?) OR topics.user_id = ?)',
-          '(topics.id NOT IN (?) OR topics.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?))',
+          '(topics.id NOT IN (?) OR topics.user_id IN (SELECT u.id FROM users u WHERE admin = ? OR u.id = ?))',
           SiteSetting.ghostmode_topics.split('|'),
           "t",
           @user&.id || 0
