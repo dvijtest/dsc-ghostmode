@@ -1,6 +1,6 @@
 # name: ghostmode
 # about: Hide a user's posts from everybody else
-# version: 0.0.2
+# version: 0.0.3
 # authors: dvij
 enabled_site_setting :ghostmode_enabled
 
@@ -14,7 +14,7 @@ after_initialize do
       else
         result.where(
           'posts.id NOT IN (?)',
-          SiteSetting.ghostmode_posts.split('|')
+          SiteSetting.ghostmode_posts.split('|'),
           @user&.id || 0
         )
       end
@@ -33,7 +33,7 @@ after_initialize do
       else
         result.where(
           'topics.id NOT IN (?)',
-          SiteSetting.ghostmode_topics.split('|')
+          SiteSetting.ghostmode_topics.split('|'),
           @user&.id || 0
         )
       end
