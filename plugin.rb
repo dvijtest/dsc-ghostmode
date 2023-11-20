@@ -1,6 +1,6 @@
 # name: dsc-ghostmode
 # about: Hide a user's posts from everybody else
-# version: 0.0.15
+# version: 0.0.16
 # authors: dvijtest
 enabled_site_setting :ghostmode_enabled
 
@@ -15,10 +15,12 @@ after_initialize do
         #  'posts.id NOT IN (?)',
         #   SiteSetting.ghostmode_posts.split('|')
         # )
+        print @user
         result.where(
           #'(posts.id NOT IN (?) OR posts.user_id = ?)',
           #'(posts.id NOT IN (?) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?))', #0.0.8
-          '(posts.id NOT IN (?) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ?) OR posts.user_id = ?)',
+          #'(posts.id NOT IN (?) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ?) OR posts.user_id = ?)',
+          '(posts.id NOT IN (?) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?)) AND posts.reply_to_post_number IS NULL',
           SiteSetting.ghostmode_posts.split('|'),
           true,
           @user&.id || 0
