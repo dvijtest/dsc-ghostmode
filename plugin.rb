@@ -1,6 +1,6 @@
 # name: dsc-ghostmode
 # about: Hide a user's posts from everybody else
-# version: 0.0.11
+# version: 0.0.12
 # authors: dvijtest
 enabled_site_setting :ghostmode_enabled
 
@@ -70,9 +70,11 @@ after_initialize do
 
   module ::DiscourseShadowbanPostCreator
     def update_topic_stats
-      return unless SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil?
-
-      super
+      #return unless SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil? #0.0.11
+      #super
+      if SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil?
+        super
+      end
     end
   end
 
