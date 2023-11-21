@@ -1,10 +1,12 @@
-# name: dsc-ghostmode
-# about: Hide a user's posts from everybody else
-# version: 0.0.21
-# authors: dvijtest
+# name: ghostmode
+# about: Hide a marked posts and topics from other users
+# version: 0.0.22
+# authors: Ajay Ahire
+# url: https://github.com/dvijtest/discourse-ghostmode
 enabled_site_setting :ghostmode_enabled
 
 after_initialize do
+
   module ::DiscourseShadowbanTopicView
     def filter_post_types(posts)
       result = super(posts)
@@ -12,11 +14,8 @@ after_initialize do
         result
       else
         result.where(
-          '(posts.id NOT IN (?) OR (posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?) AND posts.user_id != ?))',
-          SiteSetting.ghostmode_posts.split('|'),
-          true,
-          @user&.id || 0,
-          @user&.id || 0
+          'posts.id NOT IN (?)',
+          SiteSetting.ghostmode_posts.split('|')
         )
       end
     end
@@ -33,7 +32,7 @@ after_initialize do
         result
       else
         result.where(
-          '(topics.id NOT IN (?) OR topics.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?))',
+          '(topics.id NOT IN (?) OR topics.user_id IN (SELECT u.id FROM users u WHERE u.admin = ?) OR topics.user_id = ?)',
           SiteSetting.ghostmode_topics.split('|'),
           true,
           @user&.id || 0
@@ -46,10 +45,9 @@ after_initialize do
     prepend ::DiscourseShadowbanTopicQuery
   end
 
-
   module ::DiscourseShadowbanPostAlerter
     def create_notification(user, type, post, opts = {})
-      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(post.id).nil?
+      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(@post.id).nil?
         super(user, type, post, opts)
       end
     end
@@ -70,5 +68,4 @@ after_initialize do
   class ::PostCreator
     prepend ::DiscourseShadowbanPostCreator
   end
-
 end
