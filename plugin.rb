@@ -1,6 +1,6 @@
 # name: ghostmode
 # about: Hide a marked posts and topics from other users
-# version: 0.0.22
+# version: 0.0.24
 # authors: Ajay Ahire
 # url: https://github.com/dvijtest/discourse-ghostmode
 enabled_site_setting :ghostmode_enabled
@@ -32,10 +32,8 @@ after_initialize do
         result
       else
         result.where(
-          '(topics.id NOT IN (?) OR topics.user_id IN (SELECT u.id FROM users u WHERE u.admin = ?) OR topics.user_id = ?)',
-          SiteSetting.ghostmode_topics.split('|'),
-          true,
-          @user&.id || 0
+          'topics.id NOT IN (?)',
+          SiteSetting.ghostmode_topics.split('|')
         )
       end
     end
@@ -45,27 +43,27 @@ after_initialize do
     prepend ::DiscourseShadowbanTopicQuery
   end
 
-  module ::DiscourseShadowbanPostAlerter
-    def create_notification(user, type, post, opts = {})
-      if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(@post.id).nil?
-        super(user, type, post, opts)
-      end
-    end
-  end
+  # module ::DiscourseShadowbanPostAlerter
+  #   def create_notification(user, type, post, opts = {})
+  #     if (SiteSetting.ghostmode_show_to_staff && user&.staff?) || SiteSetting.ghostmode_posts.split('|').find_index(@post.id).nil?
+  #       super(user, type, post, opts)
+  #     end
+  #   end
+  # end
 
-  class ::PostAlerter
-    prepend ::DiscourseShadowbanPostAlerter
-  end
+  # class ::PostAlerter
+  #   prepend ::DiscourseShadowbanPostAlerter
+  # end
 
-  module ::DiscourseShadowbanPostCreator
-    def update_topic_stats
-      if SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil?
-        super
-      end
-    end
-  end
+  # module ::DiscourseShadowbanPostCreator
+  #   def update_topic_stats
+  #     if SiteSetting.ghostmode_topics.split('|').find_index(@post.id).nil?
+  #       super
+  #     end
+  #   end
+  # end
 
-  class ::PostCreator
-    prepend ::DiscourseShadowbanPostCreator
-  end
+  # class ::PostCreator
+  #   prepend ::DiscourseShadowbanPostCreator
+  # end
 end
