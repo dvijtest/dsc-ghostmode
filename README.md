@@ -1,0 +1,1 @@
+#### Discourse Ghost Mode Plugin
