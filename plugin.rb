@@ -1,8 +1,8 @@
 # name: ghostmode
 # about: Hide a marked posts and topics from other users
-# version: 0.0.24
-# authors: Ajay Ahire
-# url: https://github.com/dvijtest/discourse-ghostmode
+# version: 0.0.25
+# authors: dvijtest
+# url: https://github.com/dvijtest/dsc-ghostmode
 enabled_site_setting :ghostmode_enabled
 
 after_initialize do
@@ -14,8 +14,9 @@ after_initialize do
         result
       else
         result.where(
-          'posts.id NOT IN (?)',
-          SiteSetting.ghostmode_posts.split('|')
+          '(posts.id NOT IN (?) OR posts.user_id = ?)',
+          SiteSetting.ghostmode_posts.split('|'),
+          @user&.id || 0
         )
       end
     end
@@ -32,8 +33,9 @@ after_initialize do
         result
       else
         result.where(
-          'topics.id NOT IN (?)',
-          SiteSetting.ghostmode_topics.split('|')
+          '(topics.id NOT IN (?) OR topics.user_id = ?)',
+          SiteSetting.ghostmode_topics.split('|'),
+          @user&.id || 0
         )
       end
     end
