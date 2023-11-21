@@ -14,7 +14,7 @@ after_initialize do
         result
       else
         result.where(
-          '((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) AND posts.user_id = ?)',
+          '((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id = ?)',
           SiteSetting.ghostmode_posts.split('|'),
           SiteSetting.ghostmode_posts.split('|'),
           @user&.id || 0
