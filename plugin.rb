@@ -14,11 +14,11 @@ after_initialize do
         result
       else
         result.where(
-          '((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id = ?)',
+          '((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id = ? OR posts.user_id IN (SELECT id from users where admin = ?))',
           SiteSetting.ghostmode_posts.split('|'),
           SiteSetting.ghostmode_posts.split('|'),
-          true,
-          @user&.id || 0
+          @user&.id || 0,
+          true
         )
       end
     end
