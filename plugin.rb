@@ -16,7 +16,7 @@ after_initialize do
         result.where(
           #'((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id = ?)',
           #'((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? OR u.id = ?))', #0.0.28
-          '((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? AND u.id = ?)',
+          '((posts.id NOT IN (?) AND posts.reply_to_post_number NOT IN (?)) OR posts.user_id IN (SELECT u.id FROM users u WHERE u.admin = ? AND u.id = ?))',
           SiteSetting.ghostmode_posts.split('|'),
           SiteSetting.ghostmode_posts.split('|'),
           true,
