@@ -22,7 +22,6 @@ after_initialize do
             @user&.id || 0,
             true
         )
-        p result
       end
     end
   end
