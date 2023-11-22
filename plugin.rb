@@ -1,6 +1,6 @@
 # name: dsc-ghostmode
 # about: Hide a marked posts and topics from other users
-# version: 0.0.38
+# version: 0.0.39
 # authors: dvijtest
 # url: https://github.com/dvijtest/dsc-ghostmode
 enabled_site_setting :ghostmode_enabled
