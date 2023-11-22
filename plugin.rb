@@ -1,6 +1,6 @@
 # name: dsc-ghostmode
 # about: Hide a marked posts and topics from other users
-# version: 0.0.41
+# version: 0.0.42
 # authors: dvijtest
 # url: https://github.com/dvijtest/dsc-ghostmode
 enabled_site_setting :ghostmode_enabled
@@ -16,11 +16,7 @@ after_initialize do
         result.where(
           '(
             (
-              posts.id NOT IN (?) AND 
-              posts.reply_to_post_number NOT IN 
-                (
-                  SELECT post_number FROM posts p WHERE p.id IN (?)
-                )
+              posts.id NOT IN (?) AND
             )
             OR posts.user_id = ?
             OR 
@@ -29,17 +25,15 @@ after_initialize do
                 (
                   SELECT id from users u where u.admin = ?
                 )
-              AND posts.reply_to_post_number NOT IN 
+              AND posts.reply_to_post_number IN 
                 (
-                  SELECT post_number FROM posts p WHERE p.id IN (?) AND p.user_id != ?
+                  SELECT post_number FROM posts p WHERE p.user_id = ?
                 )
-              )
-            )',
-          posts_list,
+            )
+          )',
           posts_list,
           @user&.id || 0,
           true,
-          posts_list,
           @user&.id || 0
         )
       end
