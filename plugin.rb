@@ -1,6 +1,6 @@
 # name: dsc-ghostmode
 # about: Hide a marked posts and topics from other users
-# version: 0.0.39
+# version: 0.0.40
 # authors: dvijtest
 # url: https://github.com/dvijtest/dsc-ghostmode
 enabled_site_setting :ghostmode_enabled
@@ -12,15 +12,36 @@ after_initialize do
       if SiteSetting.ghostmode_show_to_staff && @user&.staff?
         result
       else
-        psts = SiteSetting.ghostmode_posts.split('|')
+        posts_list = SiteSetting.ghostmode_posts.split('|')
         result.where(
-          '(posts.id NOT IN (?) 
-          AND posts.reply_to_post_number NOT IN (SELECT post_number FROM posts AS banned_posts WHERE banned_posts.id IN (?)))
-          OR (posts.user_id = ? OR posts.user_id IN (SELECT id FROM users AS admins WHERE admins.admin = ?))',
-            psts,
-            psts,
-            @user&.id || 0,
-            true
+          '(
+            (
+              posts.id NOT IN (?) AND 
+              posts.reply_to_post_number NOT IN 
+                (
+                  SELECT post_number FROM posts p WHERE p.id IN (?)
+                )
+            )
+            OR posts.user_id = ?
+            OR 
+            (
+              posts.user_id IN 
+                (
+                  SELECT id from users u where u.admin = ?
+                )
+              AND posts.reply_to_post_number NOT IN 
+                (
+                  SELECT post_number FROM posts p WHERE p.id IN (?) AND p.user_id != ?
+                )
+              )
+            )
+          )',
+          posts_list,
+          posts_list,
+          @user&.id || 0,
+          true,
+          posts_list,
+          @user&.id || 0
         )
       end
     end
