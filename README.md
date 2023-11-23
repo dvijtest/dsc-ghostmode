@@ -3,3 +3,6 @@
 
 v0.0.48
 Added app,assets,lib folder
+
+v0.0.49
+Removed app,assets,lib folder

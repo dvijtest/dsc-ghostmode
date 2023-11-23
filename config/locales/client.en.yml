@@ -1,9 +1,0 @@
-en:
-  js:
-    button:
-      show_posts: 
-          button: "Show Posts"
-          help: "Set replies in this topic visible to everyone"
-      hide_posts: 
-          button: "Hide Posts"
-          help: "Make replies in this topic invisible to other users"

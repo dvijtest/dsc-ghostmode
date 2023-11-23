@@ -1,17 +1,15 @@
 # name: dsc-ghostmode
 # about: Hide a marked posts and topics from other users
-# version: 0.0.48
+# version: 0.0.49
 # authors: dvijtest
 # url: https://github.com/dvijtest/dsc-ghostmode
 enabled_site_setting :ghostmode_enabled
-
-load File.expand_path('../lib/dsc-ghostmode/engine.rb', __FILE__)
 
 after_initialize do
   module ::DiscourseShadowbanTopicView
     def filter_post_types(posts)
       result = super(posts)
-      if SiteSetting.ghostmode_show_to_staff && @user&.staff? && posts.custom_fields.keys.include?('hide_posts') && posts.custom_fields['hide_posts']
+      if SiteSetting.ghostmode_show_to_staff && @user&.staff?
         result
       else
         posts_list = SiteSetting.ghostmode_posts.split('|')
@@ -75,16 +73,6 @@ after_initialize do
 
   class ::TopicQuery
     prepend ::DiscourseShadowbanTopicQuery
-  end
-
-  #Topic.register_custom_field_type('hide_posts', :boolean)
-  Posts.register_custom_field_type('hide_posts', :boolean)
-  add_to_serializer :topic_view, :hide_posts do
-    object.topic.custom_fields['hide_posts'] 
-  end
-
-  Discourse::Application.routes.append do
-    mount ::DiscourseShadowbanTopicView::Engine, at: "/hide_posts"
   end
 
   # module ::DiscourseShadowbanPostAlerter
